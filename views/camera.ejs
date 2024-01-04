@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Camera</title>
+  <script src="https://rawgit.com/sitepoint-editors/jsqrcode/master/src/qr_packed.js"></script>
+  <script src="https://cdn.rawgit.com/sitepoint-editors/jsqrcode/master/src/webqr.js"></script>
+</head>
+<body>
+  <h1>QR Code Camera</h1>
+  <video id="qr-video" width="100%"></video>
+  <button onclick="startScanning()">Start Scanning</button>
+  <button onclick="stopScanning()">Stop Scanning</button>
+  <div id="qr-value"></div>
+
+  <script>
+    const video = document.getElementById('qr-video');
+    const qrValue = document.getElementById('qr-value');
+
+    function startScanning() {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
+          video.srcObject = stream;
+          video.play();
+          scan();
+        });
+      }
+    }
+
+    function stopScanning() {
+      const stream = video.srcObject;
+      const tracks = stream.getTracks();
+
+      tracks.forEach(track => {
+        track.stop();
+      });
+
+      video.srcObject = null;
+    }
+
+    function scan() {
+      const canvas = window.qrcode.capture(video);
+      if (canvas !== null) {
+        const ctx = canvas.getContext('2d');
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        const qr = new window.QRCodeReader();
+        const result = qr.decode(imageData);
+        if (result) {
+          qrValue.innerText = 'QR Code Value: ' + result;
+          stopScanning();
+        } else {
+          requestAnimationFrame(scan);
+        }
+      } else {
+        requestAnimationFrame(scan);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .card, .card * {
+        visibility: visible;
+    }
+    .card {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+    .btn {
+        visibility: hidden;
+    }
+}
+
+/* Camera */
+  
+  h1 {
+    color: #333;
+  }
+  
+  video {
+    width: 80%;
+    max-width: 600px;
+    margin: 20px 0;
+  }
+  
+  button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  #qr-value {
+    margin-top: 20px;
+    font-size: 18px;
+  }
+  
